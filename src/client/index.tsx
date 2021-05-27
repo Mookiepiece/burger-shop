@@ -2,7 +2,7 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { loadableReady } from '@loadable/component';
-import App from './App';
+import App from '../App';
 import nProgress from 'nprogress';
 
 nProgress.start();

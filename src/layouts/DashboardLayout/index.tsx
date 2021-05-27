@@ -6,6 +6,7 @@ const { Header, Content, Footer } = Layout;
 const routes = {
   '/': 'Home',
   '/foo': 'Foo',
+  '/foo/foo-plus': 'Foo +',
 };
 
 const DashboardLayout: React.FC = ({ children }) => {
@@ -14,13 +15,11 @@ const DashboardLayout: React.FC = ({ children }) => {
   return (
     <Layout className="layout">
       <Header>
-        <Menu theme="dark" mode="horizontal" selectedKeys={[location.pathname]}>
-          {Object.entries(routes).map(([to, name]) => (
-            <Menu.Item key={to}>
-              <NavLink to={to}>{name}</NavLink>
-            </Menu.Item>
-          ))}
-        </Menu>
+        {Object.entries(routes).map(([to, name]) => (
+          <NavLink key={to} to={to}>
+            {name}
+          </NavLink>
+        ))}
       </Header>
       <Content style={{ padding: '0 50px' }}>
         <Card>{children}</Card>

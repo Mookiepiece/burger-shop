@@ -60,6 +60,47 @@ module.exports = {
 
     return webpackConfig;
   },
+  // modifyPaths({
+  //   webpackObject, // the imported webpack node module
+  //   options: {
+  //     pluginOptions, // the options passed to the plugin ({ name:'pluginname', options: { key: 'value'}})
+  //     razzleOptions, // the modified options passed to Razzle in the `options` key in `razzle.config.js` (options: { key: 'value'})
+  //   },
+  //   paths, // the default paths that will be used by Razzle.
+  // }) {
+  //   console.log({
+  //     dotenv: 'D:\\Studio\\VSCodeLab\\my-app2\\.env',
+  //     appPath: 'D:\\Studio\\VSCodeLab\\my-app2',
+  //     appBuild: 'D:\\Studio\\VSCodeLab\\my-app2\\build',
+  //     appBuildPublic: 'D:\\Studio\\VSCodeLab\\my-app2\\build\\public',
+  //     appAssetsManifest: 'D:\\Studio\\VSCodeLab\\my-app2\\build\\assets.json',
+  //     appChunksManifest: 'D:\\Studio\\VSCodeLab\\my-app2\\build\\chunks.json',
+  //     appBuildStaticExport: 'D:\\Studio\\VSCodeLab\\my-app2\\build\\static_export.js',
+  //     appBuildStaticExportRoutes: 'D:\\Studio\\VSCodeLab\\my-app2\\build\\public\\static_routes.js',
+  //     appPublic: 'D:\\Studio\\VSCodeLab\\my-app2\\public',
+  //     appNodeModules: 'D:\\Studio\\VSCodeLab\\my-app2\\node_modules',
+  //     appSrc: 'D:\\Studio\\VSCodeLab\\my-app2\\src',
+  //     appHtml: 'D:\\Studio\\VSCodeLab\\my-app2\\public\\index.html',
+  //     appPackageJson: 'D:\\Studio\\VSCodeLab\\my-app2\\package.json',
+  //     appServerJs: 'D:\\Studio\\VSCodeLab\\my-app2\\src\\server',
+  //     appServerIndexJs: 'D:\\Studio\\VSCodeLab\\my-app2\\src',
+  //     appClientIndexJs: 'D:\\Studio\\VSCodeLab\\my-app2\\src\\client',
+  //     appStaticExportJs: 'D:\\Studio\\VSCodeLab\\my-app2\\src\\static_export',
+  //     tsTestsSetup: 'D:\\Studio\\VSCodeLab\\my-app2\\src\\setupTests.ts',
+  //     jsTestsSetup: 'D:\\Studio\\VSCodeLab\\my-app2\\src\\setupTests.js',
+  //     appBabelRc: 'D:\\Studio\\VSCodeLab\\my-app2\\.babelrc',
+  //     appRazzleConfig: 'D:\\Studio\\VSCodeLab\\my-app2\\razzle.config.js',
+  //     nodePaths: '',
+  //     ownPath: 'D:\\Studio\\VSCodeLab\\my-app2\\node_modules\\razzle',
+  //     ownNodeModules: 'D:\\Studio\\VSCodeLab\\my-app2\\node_modules\\razzle\\node_modules',
+  //     publicUrl: undefined,
+  //     servedPath: '/',
+  //     appJsConfig: 'D:\\Studio\\VSCodeLab\\my-app2\\jsconfig.json',
+  //     appTsConfig: 'D:\\Studio\\VSCodeLab\\my-app2\\tsconfig.json',
+  //   });
+  //   // Do some stuff...
+  //   return paths;
+  // },
   modifyBabelOptions(defaultBabelOptions, { tagert, dev }) {
     var env = process.env.BABEL_ENV || process.env.NODE_ENV;
     if (env !== 'development' && env !== 'test' && env !== 'production') {

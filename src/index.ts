@@ -1,3 +1,8 @@
+/**
+ * required by razzle
+ * run server, nothing special in this file.
+ */
+
 import http from 'http';
 import open from 'open';
 import { dev } from './utils/env';

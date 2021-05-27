@@ -1,5 +1,3 @@
-import { intranetClient } from '../utils/request';
-
 type Req = {
   id: number;
 };
@@ -11,6 +9,11 @@ type Res = {
 };
 
 export const apiGetFirstPost = ({ id }: Req): Promise<Res> => {
-  console.log('original 14');
-  return intranetClient.get<Req, Res>(`/posts/${id}`, { id });
+  console.log('mocked 12');
+  return Promise.resolve({
+    userId: 100,
+    id: 100,
+    title: 'ii',
+    body: '12121',
+  });
 };

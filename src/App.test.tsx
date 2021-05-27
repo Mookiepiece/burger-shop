@@ -1,16 +1,18 @@
 import App from './App';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { mount, shallow } from 'enzyme';
+import { Button } from 'antd';
+import { MemoryRouter } from 'react-router';
+import { act } from 'react-dom/test-utils';
 
 describe('<App />', () => {
-  test('renders without exploding', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
-      div
-    );
+  test('renders without exploding', async () => {
+    await act(async () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>
+      );
+    });
   });
 });

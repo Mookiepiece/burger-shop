@@ -1,4 +1,4 @@
-import App from './App';
+import App from '../App';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
@@ -8,9 +8,11 @@ import Router from '@koa/router';
 import { renderToString } from 'react-dom/server';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import path from 'path';
+import { loadPageGetInitialProps } from './loadPageInitialProps';
+import { SsrContext } from './SsrContext';
 
 const router = new Router();
-router.get('/(.*)', ctx => {
+router.get('/(.*)', async ctx => {
   // We create an extractor from the statsFile
   const extractor = new ChunkExtractor({
     statsFile: path.resolve('build/loadable-stats.json'),
@@ -20,10 +22,20 @@ router.get('/(.*)', ctx => {
 
   const context: StaticRouterContext = {};
 
+  const { pageInitialProps } = await loadPageGetInitialProps(ctx);
+
+  ctx.state = {
+    meta: {
+      pageInitialProps,
+    },
+  };
+
   const markup = renderToString(
     <ChunkExtractorManager extractor={extractor}>
       <StaticRouter context={context} location={ctx.url}>
-        <App />
+        <SsrContext.Provider value={ctx}>
+          <App />
+        </SsrContext.Provider>
       </StaticRouter>
     </ChunkExtractorManager>
   );
@@ -49,6 +61,7 @@ router.get('/(.*)', ctx => {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         ${linkTags}
         ${styleTags}
+        <script>window.g_initialProps = ${JSON.stringify(pageInitialProps)}</script>
       </head>
       <body>
         <div id="root">${markup}</div>
