@@ -1,6 +1,7 @@
 {
-  "name": "my-razzle-app",
-  "version": "1.0.0",
+  "name": "burger-shop",
+  "version": "0.0.1",
+  "private": true,
   "license": "WTFPL",
   "scripts": {
     "start": "razzle start",
