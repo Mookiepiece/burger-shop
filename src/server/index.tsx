@@ -62,6 +62,17 @@ router.get('/(.*)', async ctx => {
         ${linkTags}
         ${styleTags}
         <script>window.g_initialProps = ${JSON.stringify(pageInitialProps)}</script>
+        ${
+          // no stylesheet in development mode at the first frame until style-loader inited, have to hide entire body
+          process.env.NODE_ENV === 'development'
+            ? `<script>
+            var __DEV_STYLE_HACK = document.createElement('style');
+            __DEV_STYLE_HACK.innerText = 'body{display:none;}'
+            document.head.appendChild(a);
+            window.onload= () => __DEV_STYLE_HACK?.parentNode.removeChild(__DEV_STYLE_HACK)
+            </script>`
+            : ''
+        }
       </head>
       <body>
         <div id="root">${markup}</div>

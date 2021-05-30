@@ -1,7 +1,7 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Layout, Menu, Card } from 'antd';
-const { Header, Content, Footer } = Layout;
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { Link } from 'starfall';
+import './styles.scss';
 
 const routes = {
   '/': 'Home',
@@ -9,23 +9,42 @@ const routes = {
   '/foo/foo-plus': 'Foo +',
 };
 
-const DashboardLayout: React.FC = ({ children }) => {
-  const location = useLocation();
+const NavLink: React.FC<{
+  path: string;
+}> = ({ path, children }) => {
+  const history = useHistory();
+  const match = useRouteMatch({
+    path,
+  });
 
   return (
-    <Layout className="layout">
-      <Header>
-        {Object.entries(routes).map(([to, name]) => (
-          <NavLink key={to} to={to}>
+    <Link
+      type="button"
+      href={path}
+      active={!!match?.isExact}
+      onClick={e => {
+        e.preventDefault();
+        history.push(path);
+      }}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const DashboardLayout: React.FC = ({ children }) => {
+  return (
+    <>
+      <header>
+        {Object.entries(routes).map(([path, name]) => (
+          <NavLink key={path} path={path}>
             {name}
           </NavLink>
         ))}
-      </Header>
-      <Content style={{ padding: '0 50px' }}>
-        <Card>{children}</Card>
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-    </Layout>
+      </header>
+      <main style={{ padding: '0 50px' }}>{children}</main>
+      <footer style={{ textAlign: 'center' }}>U la U la U la</footer>
+    </>
   );
 };
 

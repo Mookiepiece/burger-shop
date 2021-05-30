@@ -37,26 +37,28 @@ module.exports = {
       );
     }
 
-    // use MiniCSSExtractPLugin instead default style-loader just like in prod mode
-    // to avoid no-styled screen the first frame page rendered in dev mode
-    if (target === 'web' && dev) {
-      const styleLoaderFinder = makeLoaderFinder('style-loader');
+    // 开发模式下服务端渲染不会包含CSS,首屏不是白屏但是无样式，可以通过以下配置开启，
+    // 但是服务线程不认css更新，客户线程会延迟更新。所以认了，umi也是同样的问题
+    // // use MiniCSSExtractPLugin instead default style-loader just like in prod mode
+    // // to avoid no-styled screen the first frame page rendered in dev mode
+    // if (target === 'web' && dev) {
+    //   const styleLoaderFinder = makeLoaderFinder('css-loader');
 
-      // [.css, .s(a|c)ss]
-      const cssRulesList = webpackConfig.module.rules.filter(styleLoaderFinder);
+    //   // [.css, .s(a|c)ss]
+    //   const cssRulesList = webpackConfig.module.rules.filter(styleLoaderFinder);
 
-      if (cssRulesList.every(cssRules => cssRules.use.findIndex(styleLoaderFinder) === 0)) {
-        throw new Error(`[Thimble Razzle Plugin] style-loader was not found`);
-      }
-      cssRulesList.forEach(cssrules => cssrules.use.shift()); // remove style loader
-      cssRulesList.forEach(cssrules => cssrules.use.unshift(MiniCssExtractPlugin.loader));
-      webpackConfig.plugins.push(
-        new MiniCssExtractPlugin({
-          filename: `${razzleOptions.cssPrefix}/bundle.[chunkhash:8].css`,
-          chunkFilename: `${razzleOptions.cssPrefix}/[name].[chunkhash:8].chunk.css`,
-        })
-      );
-    }
+    //   if (cssRulesList.every(cssRules => cssRules.use.findIndex(styleLoaderFinder) === 0)) {
+    //     throw new Error(`Razzle Plugin] style-loader was not found`);
+    //   }
+    //   cssRulesList.forEach(cssrules => cssrules.use.shift()); // remove style loader
+    //   cssRulesList.forEach(cssrules => cssrules.use.unshift(MiniCssExtractPlugin.loader));
+    //   webpackConfig.plugins.unshift(
+    //     new MiniCssExtractPlugin({
+    //       filename: `${razzleOptions.cssPrefix}/bundle.[contenthash].css`,
+    //       chunkFilename: `${razzleOptions.cssPrefix}/[name].[contenthash].chunk.css`,
+    //     })
+    //   );
+    // }
 
     return webpackConfig;
   },
@@ -116,11 +118,18 @@ module.exports = {
     // tree shaking fallback in ONLY DEVELOPMENT mode https://material-ui.com/zh/guides/minimizing-bundle-size/
     // don't use in prod because webpack will auto tree shaking
     const babelPluginImport = [
-      'import',
-      {
-        libraryName: 'antd',
-        libraryDirectory: 'lib', // default: lib
-      },
+      [
+        'import',
+        {
+          libraryName: 'starfall',
+          libraryDirectory: 'lib',
+          customStyleName(name) {
+            return `starfall/src/_theme/${name}.scss`;
+          },
+          camel2DashComponentName: false,
+        },
+        'starfall',
+      ],
     ];
 
     return {
@@ -146,7 +155,7 @@ module.exports = {
 
       env: {
         development: {
-          plugins: [babelPluginImport],
+          plugins: [...babelPluginImport],
         },
         test: {
           plugins: [
@@ -154,7 +163,7 @@ module.exports = {
             'babel-plugin-dynamic-import-node',
             // Transform ES modules to commonjs for Jest support
             ['@babel/plugin-transform-modules-commonjs', { loose: true }],
-            babelPluginImport,
+            ...babelPluginImport,
           ],
         },
         production: {

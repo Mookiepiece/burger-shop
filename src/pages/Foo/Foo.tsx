@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Space } from 'antd';
+import { Button } from 'starfall';
 import { useAsyncFn } from 'react-use';
 import { apiGetFirstPost } from '../../apis/auth';
 import DashboardLayout from '../../layouts/DashboardLayout';
@@ -23,15 +23,10 @@ const Foo: Page<{
 
   return (
     <DashboardLayout>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Button loading={firstPostLoading} onClick={getFirstPost}>
-          sadad
-        </Button>
-        <Card loading={firstPostLoading}>
-          {/* <pre>{'' + firstPostLoading + JSON.stringify(post || firstPost, null, 4)}</pre> */}
-          {!firstPostLoading ? <pre>{'' + firstPostLoading + JSON.stringify(post || firstPost, null, 4)}</pre> : null}
-        </Card>
-      </Space>
+      <Button loading={firstPostLoading} onClick={getFirstPost}>
+        sadad
+      </Button>
+      {!firstPostLoading ? <pre>{'' + firstPostLoading + JSON.stringify(post || firstPost, null, 4)}</pre> : null}
       <RouteView />
     </DashboardLayout>
   );
