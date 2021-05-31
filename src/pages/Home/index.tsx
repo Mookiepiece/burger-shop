@@ -17,6 +17,11 @@ class Home extends React.Component {
           <li>
             <Link to="/foo">foo</Link>
           </li>
+          <div style={{ textAlign: 'center' }}>
+            正在搭建中...
+            <br />
+            <a href="https://beian.miit.gov.cn/">闽ICP备19015680号-1</a>
+          </div>
         </ul>
       </div>
     );

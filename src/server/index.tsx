@@ -68,7 +68,7 @@ router.get('/(.*)', async ctx => {
             ? `<script>
             var __DEV_STYLE_HACK = document.createElement('style');
             __DEV_STYLE_HACK.innerText = 'body{display:none;}'
-            document.head.appendChild(a);
+            document.head.appendChild(__DEV_STYLE_HACK);
             window.onload= () => __DEV_STYLE_HACK?.parentNode.removeChild(__DEV_STYLE_HACK)
             </script>`
             : ''

@@ -4,7 +4,6 @@
  */
 
 import http from 'http';
-import open from 'open';
 import { dev } from './utils/env';
 
 // Use `app#callback()` method here instead of directly
@@ -17,7 +16,7 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   if (dev) {
     console.log(`🚀 [dev] browser opened at ${port}\n`);
-    open(`http://localhost:${port}`);
+    require('open')(`http://localhost:${port}`);
   } else {
     console.log(`🚀 server started at ${port}\n`);
   }
