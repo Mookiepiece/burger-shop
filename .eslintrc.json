@@ -32,7 +32,7 @@
     "import/resolver": {
       "alias": {
         "map": [["@", "./src"]],
-        "extensions": [".ts", "d.ts", ".tsx", ".js", ".jsx", ".json"]
+        "extensions": [".ts", ".d.ts", ".tsx", ".js", ".jsx", ".json"]
       }
     },
     "import/parsers": {
