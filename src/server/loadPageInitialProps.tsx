@@ -1,26 +1,20 @@
-import { matchRoutes } from 'react-router-config';
-import { DocRoute } from '../router/RouterView';
-import routes from '../router/routes';
-import type { Context } from 'koa';
+import { DocRoute } from '../router/RouteView';
 import { LoadableComponent } from '@loadable/component';
+import Gloading from '@/utils/Gloading';
 
 /**
  * get current page component getInitialProps data
  * @param params
  */
 export const loadPageGetInitialProps = async (
-  ctx: Context
+  routesMatched: {
+    path: string;
+    component: React.FC<{ children: DocRoute[] }> | LoadableComponent<{ children: DocRoute[] }>;
+  }[]
 ): Promise<{
   pageInitialProps: any;
   routesMatched: any;
 }> => {
-  const routesMatched: {
-    path: string;
-    component: React.FC<{ children: DocRoute[] }> | LoadableComponent<{ children: DocRoute[] }>;
-  }[] = matchRoutes(routes, ctx.path)
-    .map(({ route }) => route)
-    .filter(r => 'component' in r) as any;
-
   const promises = routesMatched
     .map(async ({ component }) => {
       let Component: any = component;
@@ -41,4 +35,30 @@ export const loadPageGetInitialProps = async (
     pageInitialProps,
     routesMatched,
   };
+};
+
+/**
+ * get current page component getInitialProps data
+ * @param params
+ */
+export const loadPages = async (
+  routesMatched: {
+    path: string;
+    component: React.FC<{ children: DocRoute[] }> | LoadableComponent<{ children: DocRoute[] }>;
+  }[]
+): Promise<void> => {
+  Gloading.lock();
+  await Promise.all(
+    routesMatched.map(async ({ component }) => {
+      let Component: any = component;
+      console.log('23', Component?.load);
+      // preload for dynamicImport
+      if (Component?.load) {
+        const preloadComponent = await Component.load();
+        console.log('3', preloadComponent);
+        Component = preloadComponent?.default || preloadComponent;
+      }
+    })
+  );
+  Gloading.unlock();
 };

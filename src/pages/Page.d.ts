@@ -1,4 +1,4 @@
-import { DocRoute } from '@/router/RouterView';
+import { DocRoute } from '@/router/RouteView';
 import { LoadableComponent } from '@loadable/component';
 import React from 'react';
 

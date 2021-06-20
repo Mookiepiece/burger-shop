@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from 'starfall';
 import { useAsyncFn } from 'react-use';
-import { apiGetFirstPost } from '../../apis/auth';
-import DashboardLayout from '../../layouts/DashboardLayout';
+import { apiGetFirstPost } from '@/apis/auth';
+import DashboardLayout from '@/layouts/DashboardLayout';
 import type { Page } from '../Page.d';
-import { RouteView } from '@/router/RouterView';
+import { RouteView } from '@/router/RouteView';
 
 type Post = {
   userId: number;

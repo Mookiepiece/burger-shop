@@ -1,25 +1,23 @@
 .Home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   text-align: center;
-}
+  background: linear-gradient(#fffc, #fffc), url('./public/paper-texture.jpg');
 
-.Home-logo {
-  height: 80px;
-  animation: Home-logo-spin infinite 20s linear;
-}
-
-.Home-header {
-  height: 150px;
-  padding: 20px;
-  color: white;
-  background-color: #222;
+  > main {
+    padding: 24px;
+  }
+  > footer {
+    margin-top: auto;
+    padding: 24px;
+    font-size: 13.2px;
+    background-color: #0002;
+  }
 }
 
 .Home-intro {
   font-size: large;
-}
-
-.Home-resources {
-  list-style: none;
 }
 
 .Home-resources > li {

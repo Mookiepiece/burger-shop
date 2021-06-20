@@ -26,7 +26,6 @@ describe('<Foo />', () => {
   });
   it('haha', async () => {
     let wrapper: ReactWrapper;
-    const mockedFetch = jest.spyOn(console, 'log');
     await act(async () => {
       wrapper = mount(
         <MemoryRouter>
@@ -48,6 +47,5 @@ describe('<Foo />', () => {
 
     expect(wrapper.find('pre')).toHaveLength(1);
     expect(wrapper.find('pre').text()).toContain('12121');
-    // expect(mockedFetch).toHaveBeenCalledTimes(1);
   });
 });

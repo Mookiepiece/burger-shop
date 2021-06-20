@@ -2,9 +2,8 @@ import type { PagePlus } from '@/pages/Page.d';
 import { useSsrContext } from '@/server/SsrContext';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-import routes from './routes';
 
-export const RouterViewContext = React.createContext<DocRoute[]>(routes);
+const RouterViewContext = React.createContext<DocRoute[]>([]);
 
 export type DocRoute =
   | {
@@ -24,38 +23,43 @@ export type DocRoute =
  * because Routes should be the children of a Switch, not descendants.
  * OMG, I wrote this👆 in strawberry-fury docs
  */
-export const RouteView: React.FC = () => {
-  const routerViewContextValue = useContext(RouterViewContext);
+export const RouteView: React.FC<{ root?: DocRoute[]; from?: string }> = React.memo(function RouteView({ root, from }) {
+  const _routerViewContextValue = useContext(RouterViewContext);
+
+  const myRoutes = root || _routerViewContextValue;
 
   const components = useMemo(() => {
-    return routerViewContextValue.map(route => {
+    return myRoutes.map(route => {
       if ('component' in route) {
         const { component: Component, routes: children, ...rest } = route;
 
-        const Page = () => {
+        const Page = React.memo(function Page() {
           const ssrContextValue = useSsrContext();
 
           const [initialProps, setInitialProps] = useState(() => {
             if (ssrContextValue) return ssrContextValue.state.meta.pageInitialProps;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (typeof window === 'object') return (window as any).g_initialProps;
             return;
           });
+
           useEffect(() => {
             // umijs renderClient
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (typeof window === 'object') (window as any).g_initialProps = null;
 
-            const a = async () => {
+            const excuteGetInitialProps = async () => {
               if ('load' in Component && Component.load) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const Page = ((await Component.load()) as any).default;
+
                 if ('getInitialProps' in Page && Page.getInitialProps) {
-                  console.log('excuted getINitialprops---', Page.getInitialProps);
                   setInitialProps(await Page.getInitialProps());
                 } else {
                   setInitialProps({});
                 }
                 return;
               }
-
               if ('getInitialProps' in Component && Component.getInitialProps) {
                 setInitialProps(await Component.getInitialProps());
               } else {
@@ -63,15 +67,15 @@ export const RouteView: React.FC = () => {
               }
             };
             if (!initialProps) {
-              a();
+              excuteGetInitialProps();
             }
-          }, [initialProps]);
+          }, [initialProps, ssrContextValue]);
           return (
             <RouterViewContext.Provider value={children || []}>
               <Component {...initialProps} />
             </RouterViewContext.Provider>
           );
-        };
+        });
 
         return {
           component: Page,
@@ -80,7 +84,7 @@ export const RouteView: React.FC = () => {
       }
       return route;
     });
-  }, [routerViewContextValue]);
+  }, [myRoutes]);
 
   return components.length ? (
     <Switch>
@@ -89,10 +93,10 @@ export const RouteView: React.FC = () => {
           const { path, exact, redirect } = route;
           return <Redirect key={path} from={path} exact={exact} to={redirect} />;
         }
-        const { path, exact, component } = route;
+        const { path, exact, component: C } = route;
 
-        return <Route key={path} path={path} exact={exact} component={component} />;
+        return <Route key={path} path={path} exact={exact} render={() => <C />} />;
       })}
     </Switch>
   ) : null;
-};
+});

@@ -1,17 +1,15 @@
-import NProgress from 'nprogress'; // progress bar
-import 'nprogress/nprogress.css'; // progress bar style
+import Gloading from '@/utils/Gloading';
 import React, { useEffect } from 'react';
 
 const LoadingPage: React.FC = () => {
   useEffect(() => {
-    NProgress.start();
-
+    Gloading.lock();
     return () => {
-      NProgress.done();
+      Gloading.unlock();
     };
   }, []);
 
-  return <div>{Array(100).fill(`Loading`).join('  •  ')}</div>;
+  return null;
 };
 
 export default LoadingPage;

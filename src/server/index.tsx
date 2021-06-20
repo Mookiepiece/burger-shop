@@ -10,9 +10,15 @@ import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import path from 'path';
 import { loadPageGetInitialProps } from './loadPageInitialProps';
 import { SsrContext } from './SsrContext';
+import { matchRoutes } from 'react-router-config';
+import routes from '../router/routes';
 
 const router = new Router();
 router.get('/(.*)', async ctx => {
+  const routesMatched = matchRoutes(routes, ctx.path).map(({ route }) => route);
+  if (!routesMatched.length) {
+    ctx.status === 404;
+  }
   // We create an extractor from the statsFile
   const extractor = new ChunkExtractor({
     statsFile: path.resolve('build/loadable-stats.json'),
@@ -22,7 +28,7 @@ router.get('/(.*)', async ctx => {
 
   const context: StaticRouterContext = {};
 
-  const { pageInitialProps } = await loadPageGetInitialProps(ctx);
+  const { pageInitialProps } = await loadPageGetInitialProps(routesMatched.filter(r => 'component' in r) as any);
 
   ctx.state = {
     meta: {
@@ -39,7 +45,10 @@ router.get('/(.*)', async ctx => {
       </StaticRouter>
     </ChunkExtractorManager>
   );
-  context.url && ctx.redirect(context.url);
+  if (context.url) {
+    ctx.redirect(context.url);
+    return;
+  }
 
   // collect script tags
   const scriptTags = extractor.getScriptTags();
@@ -53,11 +62,11 @@ router.get('/(.*)', async ctx => {
   ctx.status = 200;
   ctx.body = `
     <!doctype html>
-      <html lang="">
+      <html lang="zh-CN">
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta charset="utf-8" />
-        <title>Welcome to Razzle + Koa</title>
+        <title>Burger Shop Demo正在制作中</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         ${linkTags}
         ${styleTags}

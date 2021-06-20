@@ -3,9 +3,9 @@ import { hydrate } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { loadableReady } from '@loadable/component';
 import App from '../App';
-import nProgress from 'nprogress';
+import Gloading from '@/utils/Gloading';
 
-nProgress.start();
+Gloading.lock();
 loadableReady().then(() => {
   hydrate(
     <BrowserRouter>
@@ -13,7 +13,7 @@ loadableReady().then(() => {
     </BrowserRouter>,
     document.getElementById('root')
   );
-  nProgress.done();
+  Gloading.unlock();
 });
 
 if (module.hot) {

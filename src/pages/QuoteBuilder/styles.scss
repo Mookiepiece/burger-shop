@@ -1,0 +1,23 @@
+.burger-preview {
+  width: 300px;
+
+  .burger-preview__header {
+    height: 40px;
+    margin: 2px 0;
+    background: linear-gradient(177deg, rgb(236, 193, 0) 30%, rgb(216, 154, 60) 100%);
+    border-radius: 30px 30px 5px 5px;
+  }
+  .burger-preview__footer {
+    height: 30px;
+    margin: 2px 0;
+    background: linear-gradient(177deg, rgb(236, 193, 0) 30%, rgb(216, 154, 60) 100%);
+    border-radius: 8px;
+  }
+  .burger-preview__lettuce {
+    height: 20px;
+    margin: 2px 0;
+    background: repeating-linear-gradient(30deg, rgb(42, 241, 42) 30px, rgb(58, 223, 58) 50px, rgb(24, 226, 24) 60px);
+    background-clip: content-box;
+    border: 3px dotted lime;
+  }
+}
